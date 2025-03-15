@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -346,9 +345,6 @@ const defaultPort int = 8000
 const defaultDbPath string = "./sms.db"
 
 func main() {
-	// 定义命令行参数
-	port := flag.Int("p", defaultPort, "port")
-	flag.Parse()
 
 	initDB(defaultDbPath)
 	go startSMSListener()
@@ -368,7 +364,7 @@ func main() {
 	//系统信息
 	http.Handle("/api/sysinfo", corsMiddleware(http.HandlerFunc(sysInfoHandler)))
 	// 监听端口
-	addr := fmt.Sprintf("%s:%d", defaultHost, port)
+	addr := fmt.Sprintf("%s:%d", defaultHost, defaultPort)
 	log.Printf("服务器正在监听 %s...\n", addr)
 	if err := http.ListenAndServe(addr, nil); err != nil {
 		panic(err)

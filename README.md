@@ -1,7 +1,7 @@
 * udx710短信收发golang实现
 
 ```shell
-GOOS=linux GOARCH=arm64 go build -o build/main main.go
+GOOS=linux GOARCH=arm64 go build -o build/main main.go db.go ofono.go sysinfo.go network.go
 ```
 
 ```shell
