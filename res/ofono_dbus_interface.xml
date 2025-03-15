@@ -1,0 +1,531 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+    <interface name="org.freedesktop.DBus.Introspectable">
+        <method name="Introspect">
+            <arg name="xml" type="s" direction="out" />
+        </method>
+    </interface>
+    <interface name="org.ofono.Modem">
+        <method name="GetImeisv">
+            <arg name="svn" type="s" direction="out" />
+        </method>
+        <method name="GetProperties">
+            <arg name="properties" type="a{sv}" direction="out" />
+        </method>
+        <method name="SetProperty">
+            <arg name="property" type="s" direction="in" />
+            <arg name="value" type="v" direction="in" />
+        </method>
+        <method name="SetOnline">
+            <arg name="online" type="b" direction="in" />
+        </method>
+        <method name="SetIMEI">
+            <arg name="imei" type="s" direction="in" />
+        </method>
+        <method name="SetPowered">
+            <arg name="powered" type="b" direction="in" />
+        </method>
+        <method name="SetImeisv">
+            <arg name="svn" type="s" direction="in" />
+        </method>
+        <method name="SendAtcmd">
+            <arg name="atcmd" type="s" direction="in" />
+            <arg name="response" type="s" direction="out" />
+        </method>
+        <method name="NotifyAtCmd">
+            <arg name="atcmd" type="s" direction="in" />
+            <arg name="response" type="s" direction="out" />
+        </method>
+        <method name="GetNITZ">
+            <arg name="nitz" type="s" direction="out" />
+        </method>
+        <method name="GetLocalTime">
+            <arg name="time" type="s" direction="out" />
+        </method>
+        <method name="SetDisturbBand">
+            <arg name="lteband_num" type="u" direction="in" />
+            <arg name="lteband_list" type="s" direction="in" />
+            <arg name="nrband_num" type="u" direction="in" />
+            <arg name="nrband_list" type="s" direction="in" />
+        </method>
+        <method name="GetDisturbBand">
+            <arg name="lteband_num" type="u" direction="out" />
+            <arg name="lteband_list" type="s" direction="out" />
+            <arg name="nrband_num" type="u" direction="out" />
+            <arg name="nrband_list" type="s" direction="out" />
+        </method>
+        <method name="SetYSIMEI">
+            <arg name="ysimei" type="s" direction="in" />
+        </method>
+        <method name="QueryYSIMEI">
+            <arg name="isysimei" type="i" direction="out" />
+            <arg name="ysimei" type="s" direction="out" />
+        </method>
+        <signal name="PropertyChanged">
+            <arg name="name" type="s" />
+            <arg name="value" type="v" />
+        </signal>
+        <signal name="UrspRuleReport">
+            <arg name="ruleNum" type="u" />
+            <arg name="rules" type="a{sv}" />
+        </signal>
+        <signal name="DisturbBand">
+            <arg name="bandlist" type="s" />
+        </signal>
+        <signal name="PSREJECTED">
+            <arg name="rejectedinfo" type="a{sv}" />
+        </signal>
+    </interface>
+    <interface name="org.ofono.VoiceCallManager">
+        <method name="GetProperties">
+            <arg name="properties" type="a{sv}" direction="out" />
+        </method>
+        <method name="Dial">
+            <arg name="number" type="s" direction="in" />
+            <arg name="hide_callerid" type="s" direction="in" />
+            <arg name="path" type="o" direction="out" />
+        </method>
+        <method name="DialLast"></method>
+        <method name="DialMemory">
+            <arg name="memory_location" type="u" direction="in" />
+        </method>
+        <method name="Transfer"></method>
+        <method name="SwapCalls"></method>
+        <method name="ReleaseAndAnswer"></method>
+        <method name="ReleaseAndSwap"></method>
+        <method name="HoldAndAnswer"></method>
+        <method name="HangupAll"></method>
+        <method name="PrivateChat">
+            <arg name="call" type="o" direction="in" />
+            <arg name="calls" type="ao" direction="out" />
+        </method>
+        <method name="CreateMultiparty">
+            <arg name="calls" type="ao" direction="out" />
+        </method>
+        <method name="HangupMultiparty"></method>
+        <method name="SendTones">
+            <arg name="SendTones" type="s" direction="in" />
+        </method>
+        <method name="GetCalls">
+            <arg name="calls_with_properties" type="a(oa{sv})" direction="out" />
+        </method>
+        <signal name="Forwarded">
+            <arg name="type" type="s" />
+        </signal>
+        <signal name="BarringActive">
+            <arg name="type" type="s" />
+        </signal>
+        <signal name="PropertyChanged">
+            <arg name="name" type="s" />
+            <arg name="value" type="v" />
+        </signal>
+        <signal name="CallAdded">
+            <arg name="path" type="o" />
+            <arg name="properties" type="a{sv}" />
+        </signal>
+        <signal name="CallRemoved">
+            <arg name="path" type="o" />
+        </signal>
+        <signal name="SrvccChanged">
+            <arg name="state" type="i" />
+        </signal>
+    </interface>
+    <interface name="org.ofono.CallVolume">
+        <method name="GetProperties">
+            <arg name="properties" type="a{sv}" direction="out" />
+        </method>
+        <method name="SetProperty">
+            <arg name="property" type="s" direction="in" />
+            <arg name="value" type="v" direction="in" />
+        </method>
+        <signal name="PropertyChanged">
+            <arg name="property" type="s" />
+            <arg name="value" type="v" />
+        </signal>
+    </interface>
+    <interface name="org.ofono.SimManager">
+        <method name="GetProperties">
+            <arg name="properties" type="a{sv}" direction="out" />
+        </method>
+        <method name="SetProperty">
+            <arg name="property" type="s" direction="in" />
+            <arg name="value" type="v" direction="in" />
+        </method>
+        <method name="ChangePin">
+            <arg name="type" type="s" direction="in" />
+            <arg name="oldpin" type="s" direction="in" />
+            <arg name="newpin" type="s" direction="in" />
+        </method>
+        <method name="EnterPin">
+            <arg name="type" type="s" direction="in" />
+            <arg name="pin" type="s" direction="in" />
+        </method>
+        <method name="ResetPin">
+            <arg name="type" type="s" direction="in" />
+            <arg name="puk" type="s" direction="in" />
+            <arg name="newpin" type="s" direction="in" />
+        </method>
+        <method name="LockPin">
+            <arg name="type" type="s" direction="in" />
+            <arg name="pin" type="s" direction="in" />
+        </method>
+        <method name="UnlockPin">
+            <arg name="type" type="s" direction="in" />
+            <arg name="pin" type="s" direction="in" />
+        </method>
+        <method name="GetIcon">
+            <arg name="id" type="y" direction="in" />
+            <arg name="icon" type="ay" direction="out" />
+        </method>
+        <method name="GetAuthenticate">
+            <arg name="eapMethod" type="u" direction="in" />
+            <arg name="RandNum" type="u" direction="in" />
+            <arg name="Rand" type="s" direction="in" />
+            <arg name="eapMethod" type="u" direction="out" />
+            <arg name="RandNum" type="u" direction="out" />
+            <arg name="Authdata" type="s" direction="out" />
+        </method>
+        <method name="SimRefresh"></method>
+        <method name="SetInitAPN">
+            <arg name="apninfo" type="s" direction="in" />
+        </method>
+        <method name="SetOrQuerySimCard">
+            <arg name="isSet" type="i" direction="in" />
+            <arg name="ChangeSimId" type="i" direction="in" />
+            <arg name="isSet" type="i" direction="out" />
+            <arg name="ChangeSimId" type="i" direction="out" />
+        </method>
+        <method name="SendVsimcmd">
+            <arg name="atcmd" type="s" direction="in" />
+            <arg name="response" type="s" direction="out" />
+        </method>
+        <signal name="PropertyChanged">
+            <arg name="name" type="s" />
+            <arg name="value" type="v" />
+        </signal>
+        <signal name="VsimRequest">
+            <arg name="req" type="s" />
+        </signal>
+    </interface>
+    <interface name="org.ofono.RadioSettings">
+        <method name="GetProperties">
+            <arg name="properties" type="a{sv}" direction="out" />
+        </method>
+        <method name="SetProperty">
+            <arg name="property" type="s" direction="in" />
+            <arg name="value" type="v" direction="in" />
+        </method>
+        <method name="LockBand">
+            <arg name="Mode" type="s" direction="in" />
+            <arg name="value" type="v" direction="in" />
+        </method>
+        <method name="GetBandInfo">
+            <arg name="bandinfo" type="a{sv}" direction="out" />
+        </method>
+        <method name="GetFreqSpot">
+            <arg name="Mode" type="s" direction="in" />
+            <arg name="freqsSpots" type="a{sv}" direction="out" />
+        </method>
+        <signal name="PropertyChanged">
+            <arg name="name" type="s" />
+            <arg name="value" type="v" />
+        </signal>
+    </interface>
+    <interface name="org.ofono.MessageWaiting">
+        <method name="GetProperties">
+            <arg name="properties" type="a{sv}" direction="out" />
+        </method>
+        <method name="SetProperty">
+            <arg name="property" type="s" direction="in" />
+            <arg name="value" type="v" direction="in" />
+        </method>
+        <signal name="PropertyChanged">
+            <arg name="name" type="s" />
+            <arg name="value" type="v" />
+        </signal>
+    </interface>
+    <interface name="org.ofono.MessageManager">
+        <method name="GetProperties">
+            <arg name="properties" type="a{sv}" direction="out" />
+        </method>
+        <method name="SetProperty">
+            <arg name="property" type="s" direction="in" />
+            <arg name="value" type="v" direction="in" />
+        </method>
+        <method name="SendMessage">
+            <arg name="to" type="s" direction="in" />
+            <arg name="text" type="s" direction="in" />
+            <arg name="path" type="o" direction="out" />
+        </method>
+        <method name="IoTDMSendMessage">
+            <arg name="to" type="s" direction="in" />
+            <arg name="hex" type="s" direction="in" />
+            <arg name="path" type="o" direction="out" />
+        </method>
+        <method name="SendPDU">
+            <arg name="pdu" type="s" direction="in" />
+            <arg name="ref" type="u" direction="out" />
+        </method>
+        <method name="GetMessages">
+            <arg name="messages" type="a(oa{sv})" direction="out" />
+        </method>
+        <signal name="PropertyChanged">
+            <arg name="name" type="s" />
+            <arg name="value" type="v" />
+        </signal>
+        <signal name="MessagePDU">
+            <arg name="message" type="s" />
+            <arg name="info" type="v" />
+        </signal>
+        <signal name="IncomingMessage">
+            <arg name="message" type="s" />
+            <arg name="info" type="a{sv}" />
+        </signal>
+        <signal name="ImmediateMessage">
+            <arg name="message" type="s" />
+            <arg name="info" type="a{sv}" />
+        </signal>
+        <signal name="IoTDMMessage">
+            <arg name="message" type="s" />
+            <arg name="info" type="a{sv}" />
+        </signal>
+        <signal name="MessageAdded">
+            <arg name="path" type="o" />
+            <arg name="properties" type="a{sv}" />
+        </signal>
+        <signal name="MessageRemoved">
+            <arg name="path" type="o" />
+        </signal>
+        <signal name="MessageState">
+            <arg name="path" type="o" />
+            <arg name="info" type="a{sv}" />
+        </signal>
+    </interface>
+    <interface name="org.ofono.CallForwarding">
+        <method name="GetProperties">
+            <arg name="properties" type="a{sv}" direction="out" />
+        </method>
+        <method name="SetProperty">
+            <arg name="property" type="s" direction="in" />
+            <arg name="value" type="v" direction="in" />
+        </method>
+        <method name="DisableAll">
+            <arg name="type" type="s" direction="in" />
+        </method>
+        <signal name="PropertyChanged">
+            <arg name="name" type="s" />
+            <arg name="value" type="v" />
+        </signal>
+    </interface>
+    <interface name="org.ofono.SimToolkit">
+        <method name="GetProperties">
+            <arg name="properties" type="a{sv}" direction="out" />
+        </method>
+        <method name="SelectItem">
+            <arg name="item" type="y" direction="in" />
+            <arg name="agent" type="o" direction="in" />
+        </method>
+        <method name="RegisterAgent">
+            <arg name="path" type="o" direction="in" />
+        </method>
+        <method name="UnregisterAgent">
+            <arg name="path" type="o" direction="in" />
+        </method>
+        <signal name="PropertyChanged">
+            <arg name="name" type="s" />
+            <arg name="value" type="v" />
+        </signal>
+    </interface>
+    <interface name="org.ofono.IpMultimediaSystem">
+        <method name="GetProperties">
+            <arg name="properties" type="a{sv}" direction="out" />
+        </method>
+        <method name="Register"></method>
+        <method name="Unregister"></method>
+        <signal name="PropertyChanged">
+            <arg name="name" type="s" />
+            <arg name="value" type="v" />
+        </signal>
+    </interface>
+    <interface name="org.ofono.NetworkRegistration">
+        <method name="GetProperties">
+            <arg name="properties" type="a{sv}" direction="out" />
+        </method>
+        <method name="Register"></method>
+        <method name="GetOperators">
+            <arg name="operators_with_properties" type="a(oa{sv})" direction="out" />
+        </method>
+        <method name="Scan">
+            <arg name="operators_with_properties" type="a(oa{sv})" direction="out" />
+        </method>
+        <method name="GetSignalStrength">
+            <arg name="strength_with_properties" type="i" direction="out" />
+        </method>
+        <method name="GetTechnology">
+            <arg name="Technology" type="a{sv}" direction="out" />
+        </method>
+        <method name="GetRegistedOperatorInfo">
+            <arg name="registed_perator_info" type="a{sv}" direction="out" />
+        </method>
+        <method name="RegisterManually">
+            <arg name="mccmnc" type="s" direction="in" />
+            <arg name="tech" type="v" direction="in" />
+        </method>
+        <method name="GetNITZ">
+            <arg name="nitz" type="s" direction="out" />
+        </method>
+        <signal name="PropertyChanged">
+            <arg name="name" type="s" />
+            <arg name="value" type="v" />
+        </signal>
+    </interface>
+    <interface name="org.ofono.NetworkMonitor">
+        <method name="GetServingCellInformation">
+            <arg name="cellinfo" type="a{sv}" direction="out" />
+        </method>
+        <method name="RegisterAgent">
+            <arg name="path" type="o" direction="in" />
+            <arg name="period" type="u" direction="in" />
+        </method>
+        <method name="UnregisterAgent">
+            <arg name="agent" type="o" direction="in" />
+        </method>
+        <method name="GetNeighborCellInformation">
+            <arg name="neighborcellinfo" type="a(a{sv})" direction="out" />
+        </method>
+        <method name="GetLteCTCCInfo">
+            <arg name="infoName" type="s" direction="in" />
+            <arg name="info" type="s" direction="out" />
+        </method>
+    </interface>
+    <interface name="org.ofono.SupplementaryServices">
+        <method name="Initiate">
+            <arg name="command" type="s" direction="in" />
+            <arg name="result_name" type="s" direction="out" />
+            <arg name="value" type="v" direction="out" />
+        </method>
+        <method name="Respond">
+            <arg name="reply" type="s" direction="in" />
+            <arg name="result" type="s" direction="out" />
+        </method>
+        <method name="Cancel"></method>
+        <method name="GetProperties">
+            <arg name="properties" type="a{sv}" direction="out" />
+        </method>
+        <signal name="NotificationReceived">
+            <arg name="message" type="s" />
+        </signal>
+        <signal name="RequestReceived">
+            <arg name="message" type="s" />
+        </signal>
+        <signal name="PropertyChanged">
+            <arg name="name" type="s" />
+            <arg name="value" type="v" />
+        </signal>
+    </interface>
+    <interface name="org.ofono.CallSettings">
+        <method name="GetProperties">
+            <arg name="properties" type="a{sv}" direction="out" />
+        </method>
+        <method name="SetProperty">
+            <arg name="property" type="s" direction="in" />
+            <arg name="value" type="v" direction="in" />
+        </method>
+        <signal name="PropertyChanged">
+            <arg name="property" type="s" />
+            <arg name="value" type="v" />
+        </signal>
+    </interface>
+    <interface name="org.ofono.CallBarring">
+        <method name="GetProperties">
+            <arg name="properties" type="a{sv}" direction="out" />
+        </method>
+        <method name="SetProperty">
+            <arg name="property" type="s" direction="in" />
+            <arg name="value" type="v" direction="in" />
+            <arg name="pin2" type="s" direction="in" />
+        </method>
+        <method name="DisableAll">
+            <arg name="password" type="s" direction="in" />
+        </method>
+        <method name="DisableAllIncoming">
+            <arg name="password" type="s" direction="in" />
+        </method>
+        <method name="DisableAllOutgoing">
+            <arg name="password" type="s" direction="in" />
+        </method>
+        <method name="ChangePassword">
+            <arg name="old" type="s" direction="in" />
+            <arg name="new" type="s" direction="in" />
+        </method>
+        <signal name="PropertyChanged">
+            <arg name="name" type="s" />
+            <arg name="value" type="v" />
+        </signal>
+    </interface>
+    <interface name="org.ofono.ConnectionManager">
+        <method name="GetProperties">
+            <arg name="properties" type="a{sv}" direction="out" />
+        </method>
+        <method name="SetProperty">
+            <arg name="property" type="s" direction="in" />
+            <arg name="value" type="v" direction="in" />
+        </method>
+        <method name="AddContext">
+            <arg name="type" type="s" direction="in" />
+            <arg name="path" type="o" direction="out" />
+        </method>
+        <method name="RemoveContext">
+            <arg name="path" type="o" direction="in" />
+        </method>
+        <method name="DeactivateAll"></method>
+        <method name="GetContexts">
+            <arg name="contexts_with_properties" type="a(oa{sv})" direction="out" />
+        </method>
+        <method name="ResetContexts"></method>
+        <method name="SetInitAPN">
+            <arg name="apninfo" type="s" direction="in" />
+        </method>
+        <method name="AddContextSpecId">
+            <arg name="type" type="s" direction="in" />
+            <arg name="id" type="u" direction="in" />
+            <arg name="path" type="o" direction="out" />
+        </method>
+        <method name="SetFlowData">
+            <arg name="enable" type="u" direction="in" />
+            <arg name="save" type="u" direction="in" />
+        </method>
+        <method name="QueryFlowData">
+            <arg name="cid" type="u" direction="in" />
+            <arg name="FlowDataStatistic" type="a{sv}" direction="out" />
+        </method>
+        <method name="requestEvalute">
+            <arg name="evaluteData" type="s" direction="in" />
+            <arg name="result" type="s" direction="out" />
+        </method>
+        <method name="queryUrspRules">
+            <arg name="rules-num" type="i" direction="out" />
+            <arg name="rules" type="a{sv}" direction="out" />
+        </method>
+        <signal name="PropertyChanged">
+            <arg name="name" type="s" />
+            <arg name="value" type="v" />
+        </signal>
+        <signal name="ContextAdded">
+            <arg name="path" type="o" />
+            <arg name="properties" type="a{sv}" />
+        </signal>
+        <signal name="ContextRemoved">
+            <arg name="path" type="o" />
+        </signal>
+    </interface>
+    <node name="context1" />
+    <node name="context2" />
+    <node name="context3" />
+    <node name="context4" />
+    <node name="context5" />
+    <node name="context6" />
+    <node name="context7" />
+    <node name="context8" />
+    <node name="operator" />
+</node>
