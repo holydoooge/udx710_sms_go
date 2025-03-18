@@ -8,7 +8,6 @@ import (
 	"github.com/godbus/dbus/v5"
 )
 
-// onfon 发送at命令D-bus接口
 func sendAtCmd(atCmd, path string) (string, error) {
 	conn, err := dbus.SystemBus()
 	if err != nil {
@@ -24,18 +23,13 @@ func sendAtCmd(atCmd, path string) (string, error) {
 	return response, nil
 }
 
-// 获取服务小区信息
 func getServingCellInformation(path string) (map[string]dbus.Variant, error) {
-	// 连接到系统总线
 	conn, err := dbus.SystemBus()
 	if err != nil {
 		return nil, err
 	}
 	defer conn.Close()
-	// 获取 NetworkMonitor 对象
 	obj := conn.Object("org.ofono", dbus.ObjectPath(path))
-
-	// 调用 GetServingCellInformation 方法
 	var cellInfo map[string]dbus.Variant
 	err = obj.Call("org.ofono.NetworkMonitor.GetServingCellInformation", 0).Store(&cellInfo)
 	if err != nil {
@@ -59,7 +53,6 @@ func sendSMS(path, to, text string) (string, error) {
 	return string(resultPath), nil
 }
 
-// 新增短信监听方法
 func startSMSListener() {
 	conn, err := dbus.SystemBus()
 	if err != nil {

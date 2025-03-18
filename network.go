@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	_ "log"
 	"strconv"
 	"strings"
-	_ "log"
+
 	"github.com/godbus/dbus/v5"
 )
 
@@ -17,11 +18,11 @@ type Network struct {
 	Sinr  string `json:"sinr"`
 }
 type QoS struct {
-    QCI int `json:"qci"`
-    DL  int `json:"dl"`  // 下行带宽（Downlink）
-    UL  int `json:"ul"`  // 上行带宽（Uplink）
+	QCI int `json:"qci"`
+	DL  int `json:"dl"`
+	UL  int `json:"ul"`
 }
-// 辅助函数：分割字符串并Trim空格
+
 func splitAndTrim(part []rune) []string {
 	s := strings.TrimSpace(string(part))
 	if s == "" {
@@ -32,11 +33,9 @@ func splitAndTrim(part []rune) []string {
 	for _, p := range parts {
 		res = append(res, strings.TrimSpace(p))
 	}
- 
 	return res
 }
 func parseCellToVec(input string) [][]string {
-	// 清理输入：去除首尾空格、结尾的OK、换行符
 	cleaned := strings.TrimSpace(input)
 	cleaned = strings.TrimSuffix(cleaned, "OK")
 	cleaned = strings.ReplaceAll(cleaned, "\r", "")
@@ -51,20 +50,16 @@ func parseCellToVec(input string) [][]string {
 		c := runes[i]
 		if c == '-' {
 			if prevChar == ',' {
-				// 规则2：,- 作为负数处理，保留-
 				currentPart = append(currentPart, c)
 			} else {
-				// 检查下一个字符是否是-
 				if i+1 < len(runes) && runes[i+1] == '-' {
-					// 规则3：遇到--，分割换行并保留第二个-
 					if len(currentPart) > 0 {
 						result = append(result, splitAndTrim(currentPart))
 						currentPart = nil
 					}
 					currentPart = append(currentPart, '-')
-					i++ // 跳过下一个-
+					i++
 				} else {
-					// 规则1：单独-换行
 					if len(currentPart) > 0 {
 						result = append(result, splitAndTrim(currentPart))
 						currentPart = nil
@@ -77,14 +72,9 @@ func parseCellToVec(input string) [][]string {
 		prevChar = c
 	}
 
-	// 处理最后剩余部分
 	if len(currentPart) > 0 {
 		result = append(result, splitAndTrim(currentPart))
 	}
-
-	// 打印 result
-	// fmt.Println("Result:", result)
-
 	return result
 }
 
@@ -204,26 +194,24 @@ func formatSingleValue(val string) string {
 	}
 	return ""
 }
-// 新增解析函数
 func parseQoS(response string) QoS {
-    cleaned := strings.TrimPrefix(response, "+CGEQOSRDP: ")
-    cleaned = strings.ReplaceAll(cleaned, "\r", "")
-    cleaned = strings.ReplaceAll(cleaned, "\n", "")
+	cleaned := strings.TrimPrefix(response, "+CGEQOSRDP: ")
+	cleaned = strings.ReplaceAll(cleaned, "\r", "")
+	cleaned = strings.ReplaceAll(cleaned, "\n", "")
 	cleaned = strings.TrimSuffix(cleaned, "OK")
 
-    parts := strings.Split(strings.TrimSpace(cleaned), ",")
-    
-    getVal := func(index int) int {
-        if len(parts) > index {
-            val, _ := strconv.Atoi(strings.TrimSpace(parts[index]))
-            return val
-        }
-        return 0
-    }
+	parts := strings.Split(strings.TrimSpace(cleaned), ",")
 
-    return QoS{
-        QCI: getVal(1),
-        DL:  getVal(6),
-        UL:  getVal(7),
-    }
+	getVal := func(index int) int {
+		if len(parts) > index {
+			val, _ := strconv.Atoi(strings.TrimSpace(parts[index]))
+			return val
+		}
+		return 0
+	}
+	return QoS{
+		QCI: getVal(1),
+		DL:  getVal(6),
+		UL:  getVal(7),
+	}
 }

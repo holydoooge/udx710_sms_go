@@ -27,12 +27,12 @@ func sendAtCmdHandler(w http.ResponseWriter, r *http.Request) {
 	var requestPayload RequestPayload
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&requestPayload); err != nil {
-		fmt.Fprintln(w, "Invalid request payload:", err.Error())
+		fmt.Fprintln(w, "无效请求参数:", err.Error())
 		return
 	}
 	response, err := sendAtCmd(requestPayload.AtCmd, requestPayload.Path)
 	if err != nil {
-		fmt.Fprintln(w, "Error:", err.Error())
+		fmt.Fprintln(w, "", err.Error())
 		return
 	}
 	fmt.Fprintln(w, response)
@@ -80,7 +80,7 @@ func sysInfoHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		response := Response{
 			Code: http.StatusInternalServerError,
-			Msg:  "Error getting system info: " + err.Error(),
+			Msg:  "" + err.Error(),
 			Data: nil,
 		}
 		json.NewEncoder(w).Encode(response)
@@ -99,7 +99,6 @@ type QueryRequestPayload struct {
 	Limit int `json:"limit"`
 }
 
-// 查询短信的 Handler
 func querySMSHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -114,8 +113,6 @@ func querySMSHandler(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-
-	// 默认分页参数
 	if requestPayload.Page <= 0 {
 		requestPayload.Page = 1
 	}
@@ -123,7 +120,6 @@ func querySMSHandler(w http.ResponseWriter, r *http.Request) {
 		requestPayload.Limit = 10
 	}
 	initDB(defaultDbPath)
-	// 打开数据库连接
 	db, err := sql.Open("sqlite", defaultDbPath)
 	if err != nil {
 		response := Response{
@@ -140,7 +136,7 @@ func querySMSHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		response := Response{
 			Code: http.StatusInternalServerError,
-			Msg:  "Failed to query SMS: " + err.Error(),
+			Msg:  "查询短信错误: " + err.Error(),
 			Data: nil,
 		}
 		json.NewEncoder(w).Encode(response)
@@ -159,7 +155,6 @@ type DeleteRequestPayload struct {
 	IDs []int `json:"ids"`
 }
 
-// 批量删除短信的 Handler
 func deleteSMSHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -175,7 +170,6 @@ func deleteSMSHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	initDB(defaultDbPath)
-	// 打开数据库连接
 	db, err := sql.Open("sqlite", defaultDbPath)
 	if err != nil {
 		response := Response{
@@ -187,7 +181,6 @@ func deleteSMSHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer db.Close()
-	// 删除短信，返回受影响的行数
 	rowsAffected, err := deleteSMS(db, requestPayload.IDs)
 	if err != nil {
 		response := Response{
@@ -211,7 +204,6 @@ type NetPayload struct {
 	Path string `json:"path"`
 }
 
-// 基站信息，qos，邻区信息
 func netInfoHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var requestPayload NetPayload
@@ -225,7 +217,6 @@ func netInfoHandler(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-
 	cellInfo, err := getServingCellInformation(requestPayload.Path)
 	if err != nil {
 		response := Response{
@@ -236,7 +227,6 @@ func netInfoHandler(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-
 	technology, ok := cellInfo["Technology"]
 	if !ok {
 		response := Response{
@@ -272,7 +262,6 @@ func netInfoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	oneCellResp, err := sendAtCmd(oneCellAtCmd, requestPayload.Path)
 	if err != nil {
-
 		response := Response{
 			Code: http.StatusInternalServerError,
 			Msg:  "获取小区失败: " + err.Error(),
@@ -283,7 +272,6 @@ func netInfoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	allCellResp, err := sendAtCmd(allCellAtCmd, requestPayload.Path)
 	if err != nil {
-
 		response := Response{
 			Code: http.StatusInternalServerError,
 			Msg:  "获取邻区失败: " + err.Error(),
@@ -294,7 +282,6 @@ func netInfoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	qosResp, err := sendAtCmd("AT+CGEQOSRDP=1", requestPayload.Path)
 	if err != nil {
-
 		response := Response{
 			Code: http.StatusInternalServerError,
 			Msg:  "获取QOS失败: " + err.Error(),
